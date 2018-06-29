@@ -23,7 +23,7 @@ class ProductResource extends Resource
           'diskon'=>$this->diskon,
           'rating'=>$this->review->count()>0? $this->review->sum('star')/$this->review->count():'Belum Ada Ratting',
           'href'=>[
-            'review'=>route('review.index',$this->nama)
+            'review'=>route('review.index',$this->id)
           ]
         ];
     }
