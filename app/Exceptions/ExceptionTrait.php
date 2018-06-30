@@ -12,6 +12,7 @@ trait ExceptionTrait{
     else if($this->isHttp($e)){
       return $this->responseHttp();
     }
+    return parent::render($request, $e);
   }
   public function isModel($e){
     return $e instanceof ModelNotFoundException;
@@ -30,4 +31,5 @@ trait ExceptionTrait{
       'errors'=>'Kesalahan Route,Periksa kembali route anda'
     ],404);
   }
+
 }

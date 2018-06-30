@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Model\Product;
+use App\Exceptions\ProductNotBelongsToUser;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Product\ProductCollection;
 use Symfony\Component\HttpFoundation\Response;
+use Auth;
 class ProductController extends Controller
 {
     /**
@@ -85,6 +87,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+      $this->CheckUserProduct($product);
       if($request->deskripsi!=null){
         $request['detail']=$request->deskripsi;
         unset($request['deskripsi']);
@@ -105,7 +108,15 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $this->CheckUserProduct($product);
         $product->delete();
         return response(null,Response::HTTP_NO_CONTENT);
+    }
+
+    //Untuk mengecek apakah produk ini dibuat oleh user yang login
+    public function CheckUserProduct($product){
+      if(Auth::id() !== $product->user_id){
+        throw new ProductNotBelongsToUser;
+      }
     }
 }
